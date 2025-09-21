@@ -8,8 +8,6 @@ export class CartPage {
   readonly pageTitle: Locator;
   readonly cartItems: Locator;
   readonly cartItemNames: Locator;
-  readonly cartItemPrices: Locator;
-  readonly cartItemQuantities: Locator;
   readonly continueShoppingButton: Locator;
   readonly checkoutButton: Locator;
   readonly cartBadge: Locator;
@@ -22,8 +20,6 @@ export class CartPage {
     this.pageTitle = page.locator('.title');
     this.cartItems = page.locator('.cart_item');
     this.cartItemNames = page.locator('.inventory_item_name');
-    this.cartItemPrices = page.locator('.inventory_item_price');
-    this.cartItemQuantities = page.locator('.cart_quantity');
     this.continueShoppingButton = page.locator('[data-test="continue-shopping"]');
     this.checkoutButton = page.locator('[data-test="checkout"]');
     this.cartBadge = page.locator('.shopping_cart_badge');
@@ -54,45 +50,6 @@ export class CartPage {
     await this.checkoutButton.click();
   }
 
-  async getCartItemCount() {
-    return await this.cartItems.count();
-  }
-
-  async isCartEmpty() {
-    const itemCount = await this.getCartItemCount();
-    return itemCount === 0;
-  }
-
-  async getAllItemNames() {
-    const nameElements = await this.cartItemNames.all();
-    const names: string[] = [];
-    for (const element of nameElements) {
-      names.push(await element.textContent() ?? '');
-    }
-    return names;
-  }
-
-  async getItemPrices() {
-    const priceElements = await this.cartItemPrices.all();
-    const prices: number[] = [];
-    for (const element of priceElements) {
-      const priceText = await element.textContent();
-      const price = parseFloat((priceText ?? '$0').replace('$', ''));
-      prices.push(price);
-    }
-    return prices;
-  }
-
-  async getAllItemQuantities() {
-    const quantityElements = await this.cartItemQuantities.all();
-    const quantities: number[] = [];
-    for (const element of quantityElements) {
-      const quantityText = await element.textContent();
-      quantities.push(parseInt(quantityText ?? '0'));
-    }
-    return quantities;
-  }
-
   async getItemQuantity(itemName: string) {
     const item = this.getCartItemByName(itemName);
     const quantityText = await item.locator('.cart_quantity').textContent();
@@ -108,17 +65,6 @@ export class CartPage {
   async getItemDescription(itemName: string) {
     const item = this.getCartItemByName(itemName);
     return await item.locator('.inventory_item_desc').textContent();
-  }
-
-  async calculateTotalPrice() {
-    const prices = await this.getItemPrices();
-    const quantities = await this.getAllItemQuantities();
-
-    let total = 0;
-    for (let i = 0; i < prices.length; i++) {
-      total += prices[i] * quantities[i];
-    }
-    return total;
   }
 
   async hasItem(itemName: string) {

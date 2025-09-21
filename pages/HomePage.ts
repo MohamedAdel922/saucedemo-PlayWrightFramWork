@@ -54,14 +54,6 @@ export class HomePage {
     await this.shoppingCartLink.click();
   }
 
-  async getCartItemCount() {
-    if (await this.shoppingCartBadge.isVisible()) {
-      const badgeText = await this.shoppingCartBadge.textContent();
-      return parseInt(badgeText ?? '0');
-    }
-    return 0;
-  }
-
   async openMenu() {
     await this.menuButton.click();
   }
