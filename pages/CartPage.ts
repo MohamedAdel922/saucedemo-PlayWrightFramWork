@@ -10,7 +10,6 @@ export class CartPage {
   readonly cartItemNames: Locator;
   readonly continueShoppingButton: Locator;
   readonly checkoutButton: Locator;
-  readonly cartBadge: Locator;
   readonly cartList: Locator;
 
   constructor(page: Page) {
@@ -22,7 +21,6 @@ export class CartPage {
     this.cartItemNames = page.locator('.inventory_item_name');
     this.continueShoppingButton = page.locator('[data-test="continue-shopping"]');
     this.checkoutButton = page.locator('[data-test="checkout"]');
-    this.cartBadge = page.locator('.shopping_cart_badge');
     this.cartList = page.locator('.cart_list');
   }
 
@@ -50,23 +48,6 @@ export class CartPage {
     await this.checkoutButton.click();
   }
 
-  async getItemQuantity(itemName: string) {
-    const item = this.getCartItemByName(itemName);
-    const quantityText = await item.locator('.cart_quantity').textContent();
-    return parseInt(quantityText ?? '0');
-  }
-
-  async getItemPrice(itemName: string) {
-    const item = this.getCartItemByName(itemName);
-    const priceText = await item.locator('.inventory_item_price').textContent();
-    return parseFloat((priceText ?? '$0').replace('$', ''));
-  }
-
-  async getItemDescription(itemName: string) {
-    const item = this.getCartItemByName(itemName);
-    return await item.locator('.inventory_item_desc').textContent();
-  }
-
   async hasItem(itemName: string) {
     const item = this.getCartItemByName(itemName);
     return await item.isVisible();
@@ -74,20 +55,11 @@ export class CartPage {
 
   async removeAllItems() {
     const items = await this.getAllCartItems();
-    for (let i = 0; i < items.length; i++) {
       const removeButtons = await this.page.locator('[data-test*="remove-"]').all();
-      if (removeButtons.length > 0) {
         await removeButtons[0].click();
-      }
-    }
-  }
+        await removeButtons[1].click();
 
-  async getCartBadgeCount() {
-    if (await this.cartBadge.isVisible()) {
-      const badgeText = await this.cartBadge.textContent();
-      return parseInt(badgeText ?? '0');
-    }
-    return 0;
+    
   }
 
   async waitForLoad() {

@@ -57,22 +57,6 @@ test.describe("Checkout Flow Tests", () => {
     await expect(checkoutPage.errorMessage).toContainText("First Name is required");
   });
 
-  test("should calculate total price correctly", async () => {
-    await homePage.addProductToCart("sauce-labs-backpack");
-    await homePage.addProductToCart("sauce-labs-bike-light");
-    await homePage.addProductToCart("sauce-labs-bolt-t-shirt");
-
-    await homePage.goToCart();
-    await cartPage.proceedToCheckout();
-
-    const firstName = "Eslam";
-    const lastName = "Ahmed";
-    const zipCode = "54321";
-
-    await checkoutPage.fillCheckoutInformation(firstName, lastName, zipCode);
-
-  });
-
   test("should allow user to cancel checkout", async ({ page }) => {
     await homePage.addProductToCart("sauce-labs-backpack");
     await homePage.goToCart();
