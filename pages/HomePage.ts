@@ -78,26 +78,6 @@ export class HomePage {
     await this.sortDropdown.selectOption(sortOption);
   }
 
-  async getAllProductNames() {
-    const nameElements = await this.page.locator('.inventory_item_name').all();
-    const names: string[] = [];
-    for (const element of nameElements) {
-      names.push(await element.textContent() ?? '');
-    }
-    return names;
-  }
-
-  async getAllProductPrices() {
-    const priceElements = await this.page.locator('.inventory_item_price').all();
-    const prices: number[] = [];
-    for (const element of priceElements) {
-      const priceText = await element.textContent();
-      const price = parseFloat((priceText ?? '$0').replace('$', ''));
-      prices.push(price);
-    }
-    return prices;
-  }
-
   async clickProductName(productName: string) {
     await this.page.locator(`.inventory_item_name:has-text("${productName}")`).click();
   }
@@ -107,37 +87,8 @@ export class HomePage {
     await product.locator('.inventory_item_img').click();
   }
 
-  async getProductDescription(productName: string) {
-    const product = this.getProductByName(productName);
-    return await product.locator('.inventory_item_desc').textContent();
-  }
-
-  async getProductPrice(productName: string) {
-    const product = this.getProductByName(productName);
-    const priceText = await product.locator('.inventory_item_price').textContent();
-    return parseFloat((priceText ?? '$0').replace('$', ''));
-  }
-
-  async isProductInCart(productId: string) {
-    const removeButton = this.page.locator(`[data-test="remove-${productId}"]`);
-    return await removeButton.isVisible();
-  }
-
-  async getProductCount() {
-    return await this.inventoryItems.count();
-  }
-
   async waitForProductsToLoad() {
     await this.inventoryList.waitFor({ state: 'visible' });
     await this.inventoryItems.first().waitFor({ state: 'visible' });
-  }
-
-  async isPageLoaded() {
-    try {
-      await this.productsHeader.waitFor({ state: 'visible', timeout: 5000 });
-      return true;
-    } catch {
-      return false;
-    }
   }
 }
