@@ -15,7 +15,7 @@ export class LoginPage {
     this.userName = page.locator('[data-test="username"]');
     this.passWord = page.locator('[data-test="password"]');
     this.login_btn = page.locator('[data-test="login-button"]');
-        this.errorMessage = page.locator('[data-test="error"]');
+    this.errorMessage = page.locator('[data-test="error"]');
 
 
   }

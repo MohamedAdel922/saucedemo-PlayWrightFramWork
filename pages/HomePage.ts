@@ -18,7 +18,6 @@ export class HomePage {
   constructor(page: Page) {
     this.page = page;
 
-    // Selectors
     this.productsHeader = page.locator('.title');
     this.inventoryList = page.locator('.inventory_list');
     this.inventoryItems = page.locator('.inventory_item');
